@@ -8,7 +8,7 @@ const testRegistrationLinks = async() => {
 }
 
 const testValidAppointments = async() => {
-    const appointments = await scraper.getAvaiableAllApointments();
+    const appointments = await scraper.getAllAvaiableApointments();
     console.log(appointments);
 }
 

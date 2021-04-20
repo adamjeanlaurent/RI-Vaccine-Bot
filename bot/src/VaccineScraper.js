@@ -33,8 +33,8 @@ class VaccineScraper {
 
         return registrationLinks;
     }
-
-    async getAvaiableAllApointments() {
+    
+    async getAllAvaiableApointments() {
         const registrationLinks = await this.getRegistrationLinks();
         const availableAppointments = [];
 
@@ -80,7 +80,7 @@ class VaccineScraper {
         const mainTitle = dom.querySelector('.main-title').textContent.replace('Sign Up for Vaccinations - ', '');
 
         // get location and date
-        const vaccintationLocation = mainTitle.substring(0, mainTitle.length - mainTitle.indexOf(' on '));
+        const vaccintationLocation = mainTitle.substring(0, mainTitle.indexOf(' on '));
         const vaccinationDate = mainTitle.substring(mainTitle.indexOf(' on ') + 4);
 
         // get data
@@ -97,7 +97,8 @@ class VaccineScraper {
                     appointmentTime, 
                     vaccinationDate.replace(/(\r\n|\n|\r)/gm,'').replace(/\s\s+/g, ' '), // replace multiple spaces and newlines 
                     vaccintationLocation.replace(/(\r\n|\n|\r)/gm,'').replace(/\s\s+/g, ' '), // replace multiple spaces and newlines 
-                    locationLink);
+                    locationLink
+                );
                 validAppointments.push(validVaccineAppointment);
             }
         }
