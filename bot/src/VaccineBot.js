@@ -8,7 +8,7 @@
 const VaccineScraper = require('./VaccineScraper');
 
 class VaccineBot {
-    async constructor() {
+    constructor() {
         this.scraper = new VaccineScraper();
     }
 }
