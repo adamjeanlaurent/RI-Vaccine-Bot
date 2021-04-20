@@ -95,8 +95,8 @@ class VaccineScraper {
             if(isAppointmentAvailable) {
                 const validVaccineAppointment = new VaccineAppointment(
                     appointmentTime, 
-                    vaccinationDate.replace(/(\r\n|\n|\r)/gm,'').replace(/\s\s+/g, ' '), // replace multiple spaces and newlines 
-                    vaccintationLocation.replace(/(\r\n|\n|\r)/gm,'').replace(/\s\s+/g, ' '), // replace multiple spaces and newlines 
+                    vaccinationDate.replace(/(\r\n|\n|\r)/gm,'').replace(/\s\s+/g, ' ').trim(), // replace multiple spaces and newlines 
+                    vaccintationLocation.replace(/(\r\n|\n|\r)/gm,'').replace(/\s\s+/g, ' ').trim(), // replace multiple spaces and newlines 
                     locationLink
                 );
                 validAppointments.push(validVaccineAppointment);
