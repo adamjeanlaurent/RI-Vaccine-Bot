@@ -90,15 +90,26 @@ class VaccineScraper {
             // the second holds a paragraph tags with whether is it available
             const tableDataCells = appointmentSlot.querySelectorAll('td'); 
             const appointmentTime = tableDataCells[0].querySelector('span').textContent;
-            const isAppointmentAvailable = tableDataCells[1].querySelector('p').textContent.includes('No');
+            const isAppointmentAvailable = !tableDataCells[1].querySelector('p').textContent.includes('No');
+            const vaccinesLeft = parseInt(
+                tableDataCells[1]
+                    .querySelector('p')
+                    .textContent
+                    .replace(/(\r\n|\n|\r)/gm,'')
+                    .replace(/\s\s+/g, ' ')
+                    .trim()
+                    .substring(0,2)
+            );
 
             if(isAppointmentAvailable) {
                 const validVaccineAppointment = new VaccineAppointment(
                     appointmentTime, 
                     vaccinationDate.replace(/(\r\n|\n|\r)/gm,'').replace(/\s\s+/g, ' ').trim(), // replace multiple spaces and newlines 
                     vaccintationLocation.replace(/(\r\n|\n|\r)/gm,'').replace(/\s\s+/g, ' ').trim(), // replace multiple spaces and newlines 
-                    locationLink
+                    locationLink,
+                    vaccinesLeft
                 );
+                
                 validAppointments.push(validVaccineAppointment);
             }
         }
