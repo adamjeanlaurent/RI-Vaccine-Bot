@@ -13,7 +13,7 @@ const createTestUserAndTask = async () => {
     // create test task
     await connection.execute(
         'INSERT INTO task (userID, f_name, l_name, phone, date_picked, start_time, end_time, completed) VALUES(?, ?, ?, ?, ?, ?, ?, ?)',
-        [1, 'john', 'doe', '401-453-6532', '2021-04-21', '09:00', '11:00', 0]
+        [1, 'john', 'doe', '401-453-6532', '2021-04-21', '09:00:00', '11:00', 0]
     );
 }
 

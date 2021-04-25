@@ -1,5 +1,6 @@
 const VaccineScraper = require('./VaccineScraper');
 const connection = require('./connection');
+const { yyyymmddTommddyyyy, getHoursMinutesSeconds } = require('./date');
 
 class VaccineBot {
     constructor() {
@@ -25,7 +26,8 @@ class VaccineBot {
         const matchingAppointments = [];
 
         for(let i = 0; i < taskQueue.length; i++) {
-            if(appointmentsMap.has(taskQueue[i].date_picked)) {
+            let convertedDate = yyyymmddTommddyyyy(taskQueue[i].date_picked);
+            if(appointmentsMap.has(convertedDate)) {
                 // if there are appointments any at this date
 
                 // get appointments at the date the user wants
@@ -61,19 +63,53 @@ class VaccineBot {
                 }
             }
         }
+        return matchingAppointments;
     }
 
-    async doTimesMatch(appointment, preferences) {
+    async doTimesMatch(appointment, task) {
         // takes in an appointment
         // and the prefernces of a task
         // returns true if the times line up
         // returns false if they do not
+        // assume dates are the same if we arrived here
 
-        const { time_start, time_end } = preferences;
-        const { time } = appointment;
+        // get hours, miunutes, seconds for all times
+        const HMSAppointment = getHoursMinutesSeconds(appointment.time);
+        const HMSStart = getHoursMinutesSeconds(task.start_time);
+        const HMSEnd = getHoursMinutesSeconds(task.end_time);
 
+        // mm-dd-yyyy
+        const dateSplit = appointment.split('/');
         
-        // figure out how to parse SQL date and time
+        // extract information from times and use in date constructor
+        // new Date(year, month, day, hours, minutes, seconds, milliseconds)
+        const startDate = new Date(
+            parseInt(dateSplit[2]), // year
+            parseInt(dateSplit[1]) - 1, // month
+            parseInt(dateSplit[0]), // day
+            HMSStart.hours, // hours
+            HMSStart.minutes, // minutes
+            HMSStart.seconds // seconds
+        );
+        const endDate = new Date(
+            parseInt(dateSplit[2]), // year
+            parseInt(dateSplit[1]) - 1, // month
+            parseInt(dateSplit[0]), // day
+            HMSEnd.hours, // hours
+            HMSEnd.minutes, // minutes
+            HMSEnd.seconds // seconds
+        );
+        const appointmentDate = new Date(
+            parseInt(dateSplit[2]), // year
+            parseInt(dateSplit[1]) - 1, // month
+            parseInt(dateSplit[0]), // day
+            HMSAppointment.hours, // hours
+            HMSAppointment.minutes, // minutes
+            HMSAppointment.seconds // seconds
+        );
+
+        // https://stackoverflow.com/questions/16080378/check-if-one-date-is-between-two-dates
+        return (startDate > appointmentDate && appointmentDate < endDate);
     }
 
     async sendTextMessages(matchingAppointments) {
