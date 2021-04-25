@@ -9,6 +9,7 @@ const path = require('path');
 require('dotenv').config()
 // Import bcrypt modules and salt
 const bcrypt = require('bcrypt');
+const { exists } = require('fs');
 const saltRounds = 5;
 
 console.log(process.env.DB_HOST)
@@ -81,14 +82,34 @@ app.post('/api/register', function(req, res) {
 
 });
 
-// app.post('/api/authenticate', function(req, res) {
-//     // Grabs email & password
-//     let email = req.body.email;
-//     let password = req.body.password;
+app.post('/api/authenticate', function(req, res) {
+    // Grabs email & password
+    let email = req.body.email;
+    let password = req.body.password;
 
-//     // Gather SQL information
-//     let sql = 
-// });
+    // Gather SQL information
+    let sql = `SELECT * FROM users WHERE email='${email}' LIMIT 1;`
+
+    conn.query(sql, function (err, rows, fields) {
+        if (err) throw err;
+        if (rows.length != 0){
+            let hashedPassword = rows[0].password;
+            bcrypt.compare(password, hashedPassword, function(err, result) {
+                // result == true
+                if (result == true){
+                    req.session.userID = rows[0].userID;
+                    req.session.email = rows[0].email;
+        
+                    return res.send("You have been authenticated.");
+                } else {
+                    return res.send("This login uses incorrect email or password.");
+                }
+            });
+        } else {
+            return res.send("User doesn't exists. You should register instead!");
+        }
+    });
+});
 
 // Returns any requests to the index.html
 app.get('*', function (req, res) {
