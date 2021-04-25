@@ -31,7 +31,7 @@ class VaccineBot {
                 // if there are appointments any at this date
 
                 // get appointments at the date the user wants
-                const appointments = appointmentsMap.get(taskQueue[i].date_picked);
+                const appointments = appointmentsMap.get(convertedDate);
 
                 // search appointments at that date for an appointment that falls into
                 // the tasks time start and end
@@ -79,7 +79,7 @@ class VaccineBot {
         const HMSEnd = getHoursMinutesSeconds(task.end_time);
 
         // mm-dd-yyyy
-        const dateSplit = appointment.split('/');
+        const dateSplit = appointment.date.split('/');
         
         // extract information from times and use in date constructor
         // new Date(year, month, day, hours, minutes, seconds, milliseconds)
@@ -119,7 +119,7 @@ class VaccineBot {
 
     async run() {
         // get available appointments
-        const availableAppointments = await this.scraper.getAvaiableAllApointments();
+        const availableAppointments = await this.scraper.getAllAvaiableApointments();
 
         // convert appointments to map
         // Map<string, VaccineAppointment[]> , string is date of the appointment, and a second arg is array of appointments at that date
@@ -140,8 +140,10 @@ class VaccineBot {
         // process task queue, get appointments and tasks that matchup
         const matchingAppointments = await this.processTaskQueue(taskQueue, appointmentsMap);
 
+        console.log(matchingAppointments);
+
         // send texts
-        await this.sendTextMessages(matchingAppointments);
+        // await this.sendTextMessages(matchingAppointments);
     }
 
     // https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep

@@ -5,11 +5,10 @@
 // and in sql you have to store dates yyyy-mm-dd
 // in order to compare them, we need to convert the sql date from yyyy-mm-dd to mm-dd-yyyy
 const yyyymmddTommddyyyy = (origDate) => {
-    let splits = origDate.split('-');
-
+    let splits = origDate.toString().split('-');
     let year = parseInt(splits[0]);
     let month = parseInt(splits[1]);
-    let day = parseInt(splits[2]);
+    let day = parseInt(splits[2].substring(0,2));
 
     let fixed = '';
     

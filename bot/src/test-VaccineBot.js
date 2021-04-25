@@ -80,7 +80,7 @@ const testProcessTaskQueue = async () => {
 
     const taskQueue = await vaccineBot.getUncompletedTasks();
 
-    const matchingAppointments = await matchingAppointments.processTaskQueue(taskQueue, appointmentsMap);
+    const matchingAppointments = await vaccineBot.processTaskQueue(taskQueue, appointmentsMap);
 
     assert.strictEqual(matchingAppointments.length, 1, 'there should be 1 valid matching appointment');
     assert.strictEqual(matchingAppointments[0].time, availableAppointments[0].time, 'appointment time should be 11:10 am');
