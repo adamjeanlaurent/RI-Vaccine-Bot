@@ -10,12 +10,8 @@ require('dotenv').config()
 // Import bcrypt modules and salt
 const bcrypt = require('bcrypt');
 const { exists } = require('fs');
+const { start } = require('repl');
 const saltRounds = 5;
-
-console.log(process.env.DB_HOST)
-console.log(process.env.DB_USER)
-console.log(process.env.DB_PASS)
-console.log(process.env.DB_BASE)
 
 // Setup connection
 const conn = mysql.createPool({
@@ -82,6 +78,7 @@ app.post('/api/register', function(req, res) {
 
 });
 
+// POST - Authentication API
 app.post('/api/authenticate', function(req, res) {
     // Grabs email & password
     let email = req.body.email;
@@ -109,6 +106,27 @@ app.post('/api/authenticate', function(req, res) {
             return res.send("User doesn't exists. You should register instead!");
         }
     });
+});
+
+// POST - Add A Task To The Bot
+app.post('/api/addTask', function(req, res){
+    if (req.session){
+        // Gather userID
+        let userID = req.session.userID;
+        let f_name = req.body.f_name;
+        let l_name = req.body.l_name;
+        let phone = req.body.phone;
+        let date_picked = req.body.date_picked;
+        let start_time = req.body.start_time;
+        let end_time = req.body.end_time;
+
+        let sql = `INSERT INTO task (userID, f_name, l_name, phone, date_picked, start_time, end_time, completed) VALUES ("${userID}", "${f_name}", "${l_name}", "${phone}", "${date_picked}", "${start_time}", "${end_time}", "false")`;
+
+        conn.query(sql, function (err, rows, fields){
+            if (err) throw err;
+            return res.send("Task just added. We will see when the task is completed!");
+        });
+    }
 });
 
 // Returns any requests to the index.html
