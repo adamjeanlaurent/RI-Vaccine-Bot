@@ -15,7 +15,7 @@ const yyyymmddTommddyyyy = (origDate) => {
     // add 0 if month single digit or day single digit
     if(month < 10 && day < 10) {
         fixed = `0${month}/0${day}/${year}`
-    } 
+    }
     else if(month < 10) {
         fixed = `0${month}/${day}/${year}`
     }

@@ -2,6 +2,13 @@ const VaccineScraper = require('./VaccineScraper');
 const connection = require('./connection');
 const { yyyymmddTommddyyyy, getHoursMinutesSeconds } = require('./date');
 
+const dotenv = require('dotenv');
+dotenv.config();
+
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const client = require('twilio')(accountSid, authToken);
+
 class VaccineBot {
     constructor() {
         this.scraper = new VaccineScraper();
@@ -42,6 +49,7 @@ class VaccineBot {
                         // create new matching appointment
                         // has information to send full text message
                         matchingAppointments.push({
+                            taskID: taskQueue[i].taskID,
                             time: appointments[j].time,
                             location: appointments[j].location,
                             link: appointments[j].link,
@@ -115,6 +123,26 @@ class VaccineBot {
     async sendTextMessages(matchingAppointments) {
         // sends text messages with the detials of an appointments
         // marks tasks in db as completed
+        const senderPhoneNum = process.env.TWILIO_NUMBER_SENDER;
+        const recieverPhoneNum = process.env.TWILIO_NUMBER_RECIPIENT;
+
+        for(let mat of matchingAppointments) {
+            let messageBody = `Hello ${mat.firstname}, ${mat.lastname}\n`;
+            messageBody += 'Vaccine Appointment found for you!\n';
+            messageBody += `Time: ${mat.time}\n`;
+            messageBody += `Date: ${mat.date}\n`;
+            messageBody += `Location: ${mat.location}\n`;
+            messageBody += `Link to signup: ${mat.link}`
+
+            await client.messages.create({
+                body: messageBody,
+                from: senderPhoneNum,
+                to: recieverPhoneNum
+            });
+
+            // update task as completed
+            await connection.execute(`UPDATE task SET completed = 1 WHERE taskID = ${mat.taskID}`);
+        }
     }
 
     async run() {
@@ -140,10 +168,8 @@ class VaccineBot {
         // process task queue, get appointments and tasks that matchup
         const matchingAppointments = await this.processTaskQueue(taskQueue, appointmentsMap);
 
-        console.log(matchingAppointments);
-
         // send texts
-        // await this.sendTextMessages(matchingAppointments);
+        await this.sendTextMessages(matchingAppointments);
     }
 
     // https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep
