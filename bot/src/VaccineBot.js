@@ -44,7 +44,7 @@ class VaccineBot {
                 // the tasks time start and end
                 for(let j = 0; j < appointments.length; j++) {
                     // check if appointment and tasks's times agrees
-                    if(this.doTimesMatch(appointments[j], taskQueue[i])) {
+                    if(this.doTimesMatch(appointments[j], taskQueue[i])) { 
                         // matching appointment
                         // create new matching appointment
                         // has information to send full text message
@@ -74,7 +74,7 @@ class VaccineBot {
         return matchingAppointments;
     }
 
-    async doTimesMatch(appointment, task) {
+    doTimesMatch(appointment, task) {
         // takes in an appointment
         // and the prefernces of a task
         // returns true if the times line up
@@ -86,7 +86,7 @@ class VaccineBot {
         const HMSStart = getHoursMinutesSeconds(task.start_time);
         const HMSEnd = getHoursMinutesSeconds(task.end_time);
 
-        // mm-dd-yyyy
+        // mm/dd/yyyy
         const dateSplit = appointment.date.split('/');
         
         // extract information from times and use in date constructor
@@ -117,7 +117,7 @@ class VaccineBot {
         );
 
         // https://stackoverflow.com/questions/16080378/check-if-one-date-is-between-two-dates
-        return (startDate > appointmentDate && appointmentDate < endDate);
+        return (appointmentDate >= startDate && appointmentDate <= endDate);
     }
 
     async sendTextMessages(matchingAppointments) {
@@ -127,12 +127,12 @@ class VaccineBot {
         const recieverPhoneNum = process.env.TWILIO_NUMBER_RECIPIENT;
 
         for(let mat of matchingAppointments) {
-            let messageBody = `Hello ${mat.firstname}, ${mat.lastname}\n`;
+            let messageBody = `Hello ${mat.firstname} ${mat.lastname}\n`;
             messageBody += 'Vaccine Appointment found for you!\n';
             messageBody += `Time: ${mat.time}\n`;
             messageBody += `Date: ${mat.date}\n`;
             messageBody += `Location: ${mat.location}\n`;
-            messageBody += `Link to signup: ${mat.link}`
+            messageBody += `Link to signup: ${mat.link}`;
 
             await client.messages.create({
                 body: messageBody,
