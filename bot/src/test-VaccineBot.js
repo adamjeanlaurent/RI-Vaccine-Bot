@@ -42,24 +42,65 @@ const deleteTestUserAndTask = async () => {
 const getMockAppointments = () => {
     return [
         {
+            time: '6:00 am',
+            date: '04/25/2021',
+            location: 'East Providence POD',
+            link: 'https://www.vaccinateri.org/client/registration?clinic_id=2055'
+        },
+        {
             time: '11:10 am',
-            date: '04/23/2021',
+            date: '04/25/2021',
             location: 'East Providence POD',
             link: 'https://www.vaccinateri.org/client/registration?clinic_id=2055'
         },
         {
             time: '11:15 am',
-            date: '04/23/2021',
+            date: '04/25/2021',
             location: 'East Providence POD',
             link: 'https://www.vaccinateri.org/client/registration?clinic_id=2055'
         },
         {
             time: '11:20 am',
-            date: '04/23/2021',
+            date: '04/25/2021',
+            location: 'East Providence POD',
+            link: 'https://www.vaccinateri.org/client/registration?clinic_id=2055'
+        },
+        {
+            time: '5:20 pm',
+            date: '04/25/2021',
+            location: 'East Providence POD',
+            link: 'https://www.vaccinateri.org/client/registration?clinic_id=2055'
+        },
+        {
+            time: '10:20 pm',
+            date: '04/25/2021',
             location: 'East Providence POD',
             link: 'https://www.vaccinateri.org/client/registration?clinic_id=2055'
         }
     ];
+}
+
+const testDoTimesMatch = () => {
+    const bot = new VaccineBot();
+
+    const mockTaskQueue = [
+        {
+            taskID: 1,
+            userID: 1,
+            f_name: 'Bob', 
+            l_name: 'Johnson',
+            phone: '43434543423',
+            date_picked: '2021-04-25',
+            start_time: '09:00:00',
+            end_time: '19:00:00',
+            completed: 0,
+        }
+    ];
+
+    assert.strictEqual(bot.doTimesMatch(getMockAppointments()[0] ,mockTaskQueue[0]), false, 'times should not match');
+    assert.strictEqual(bot.doTimesMatch(getMockAppointments()[1] ,mockTaskQueue[0]), true, 'times should match');
+    assert.strictEqual(bot.doTimesMatch(getMockAppointments()[4] ,mockTaskQueue[0]), true, 'times should match');
+    assert.strictEqual(bot.doTimesMatch(getMockAppointments()[5] ,mockTaskQueue[0]), false, 'times should not match');
 }
 
 const testProcessTaskQueue = async () => {
@@ -91,4 +132,4 @@ const testProcessTaskQueue = async () => {
     assert.strictEqual(matchingAppointments[0].lastname, 'doe', 'last name should be doe');
 }
 
-testProcessTaskQueue();
+testDoTimesMatch();
