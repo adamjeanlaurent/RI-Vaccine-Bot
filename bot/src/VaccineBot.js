@@ -20,7 +20,7 @@ class VaccineBot {
             // because we process the tasks in a queue
             // the lower taskIDs will be processed first 
             // because they signed up first
-            'SELECT * FROM task WHERE completed = 0 ORDER BY taskID DESC'
+            'SELECT * FROM task WHERE completed = 0 ORDER BY taskID ASC'
         );
         return rows;
     }
