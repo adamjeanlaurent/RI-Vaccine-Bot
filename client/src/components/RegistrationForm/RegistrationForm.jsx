@@ -20,6 +20,7 @@ function RegistrationForm(props) {
         }))
     }
 
+
     const sendDetailsToServer = () => {
         // check that the user filled out form
         if (state.email.length && state.password.length) {
