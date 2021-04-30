@@ -11,7 +11,7 @@ function App() {
         <div className="container d-flex align-items-center flex-column">
           <Switch>
             <Route path="/" exact={true}>
-              <RegistrationForm />
+              <RegistrationForm showError={(err) => console.log(err)}/>
             </Route>
           </Switch> 
         </div>
