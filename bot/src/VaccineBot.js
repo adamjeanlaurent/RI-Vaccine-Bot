@@ -1,6 +1,7 @@
 const VaccineScraper = require('./VaccineScraper');
 const connection = require('./connection');
 const { yyyymmddTommddyyyy, getHoursMinutesSeconds } = require('./date');
+const sendEmail = require('./email');
 
 const dotenv = require('dotenv');
 dotenv.config();
@@ -56,6 +57,7 @@ class VaccineBot {
                             date: appointments[j].date,
                             firstname: taskQueue[i].f_name,
                             lastname: taskQueue[i].l_name,
+                            userID: taskQueue[i].userID
                         });
                         
                         // remove 1 from number of vaccines left for appointment slot
@@ -120,13 +122,17 @@ class VaccineBot {
         return (appointmentDate >= startDate && appointmentDate <= endDate);
     }
 
-    async sendTextMessages(matchingAppointments) {
-        // sends text messages with the detials of an appointments
+    async sendAlerts(matchingAppointments) {
+        // sends text messages and emails with the detials of an appointments
         // marks tasks in db as completed
         const senderPhoneNum = process.env.TWILIO_NUMBER_SENDER;
         const recieverPhoneNum = process.env.TWILIO_NUMBER_RECIPIENT;
 
         for(let mat of matchingAppointments) {
+            // get users email address
+            const [rows, fields] = await connection.execute('SELECT * FROM users WHERE userID = ?', [mat.userID]);
+            const emailAddress = rows[0].email;
+
             let messageBody = `Hello ${mat.firstname} ${mat.lastname}\n`;
             messageBody += 'Vaccine Appointment found for you!\n';
             messageBody += `Time: ${mat.time}\n`;
@@ -134,11 +140,15 @@ class VaccineBot {
             messageBody += `Location: ${mat.location}\n`;
             messageBody += `Link to signup: ${mat.link}`;
 
+            // send text 
             await client.messages.create({
                 body: messageBody,
                 from: senderPhoneNum,
                 to: recieverPhoneNum
             });
+
+            // send email
+            sendEmail(emailAddress, messageBody);
 
             // update task as completed
             await connection.execute(`UPDATE task SET completed = 1 WHERE taskID = ${mat.taskID}`);
@@ -169,7 +179,7 @@ class VaccineBot {
         const matchingAppointments = await this.processTaskQueue(taskQueue, appointmentsMap);
 
         // send texts
-        await this.sendTextMessages(matchingAppointments);
+        await this.sendAlerts(matchingAppointments);
     }
 
     // https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep
