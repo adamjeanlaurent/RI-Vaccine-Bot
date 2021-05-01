@@ -11,42 +11,45 @@ router.post('/register', function(req, res) {
     let password = req.body.password;
     
     // Save email and password in DB
-    let userPromise = new Promise(function(myResolve, myReject){
-        let sql = `SELECT userID FROM users WHERE email='${email}';`
+    if (email != "" && password != ""){
+        let userPromise = new Promise(function(myResolve, myReject){
+            let sql = `SELECT userID FROM users WHERE email='${email}';`
 
-        console.log('start here');
-
-        conn.query(sql, function (err, rows, fields) {
-            if (err) throw err;
-            if (rows.length == 0){
-                myResolve("Creating user");
-            }
-
-            else {
-                myResolve("User already exists. Try again.");
-            }
-        });
-    });
-    
-    bcrypt.hash(password, saltRounds,
-        async function(err, hashedPassword) {
-        let value = await userPromise;
-        if (err) {
-            next(err);
-        }
-        else if (value == "Creating user") {
-            sql = `INSERT INTO users (email, password) VALUES ('${email}', '${hashedPassword}');`
+            console.log('start here');
 
             conn.query(sql, function (err, rows, fields) {
                 if (err) throw err;
-                return res.send("Registration Complete!");
-            });
-        }
-        else {
-            return res.send("User already exists. Try again.")
-        }
-    });
+                if (rows.length == 0){
+                    myResolve("Creating user");
+                }
 
+                else {
+                    myResolve("User already exists. Try again.");
+                }
+            });
+        });
+        
+        bcrypt.hash(password, saltRounds,
+            async function(err, hashedPassword) {
+            let value = await userPromise;
+            if (err) {
+                next(err);
+            }
+            else if (value == "Creating user") {
+                sql = `INSERT INTO users (email, password) VALUES ('${email}', '${hashedPassword}');`
+
+                conn.query(sql, function (err, rows, fields) {
+                    if (err) throw err;
+                    return res.send("Registration Complete!");
+                });
+            }
+            else {
+                return res.send("User already exists. Try again.")
+            }
+        });
+    } else {
+        return res.send("Need the email and password to make a user.");
+    }
 });
 
 // POST - Authentication API
@@ -77,6 +80,12 @@ router.post('/authenticate', function(req, res) {
             return res.send("User doesn't exists. You should register instead!");
         }
     });
+});
+
+// GET - Logout API
+router.get('/logout', function(req, res){
+    req.session.destroy();
+    res.send('Session is destroyed.');
 });
 
 module.exports = router;

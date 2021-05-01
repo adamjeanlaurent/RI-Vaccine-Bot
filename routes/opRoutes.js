@@ -70,4 +70,23 @@ router.get('/getTasks', async function(req, res){
     } else {return res.send("No session detected.");}
 });
 
+// GET - Delete A Task
+router.get('/delTask/:id', function(req, res){
+    let taskID = req.params.id;
+
+    // Make sure user is signed in.
+    if(typeof req.session.userID !== "undefined"){
+        //Grab userID of session
+        let userID = req.session.userID;
+
+        let sql = `DELETE FROM task WHERE userID = ${userID} AND taskID = ${taskID};`;
+
+        conn.query(sql, function (err, rows, fields){
+            if (err) throw err;
+        });
+        
+        return res.send("Task Removed.");
+    } else {return res.send("No session detected.");}
+});
+
 module.exports = router;
