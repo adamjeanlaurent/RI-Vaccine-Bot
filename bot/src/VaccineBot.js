@@ -141,8 +141,8 @@ class VaccineBot {
             // textMessageBody += `Location: ${mat.location}\n`;
             // textMessageBody += `Link to signup: ${mat.link}`;
 
-            let emailMessageBody = `Hello ${mat.firstname} ${mat.lastname}<br/>`;
-            emailMessageBody += 'Vaccine Appointment found for you!<br/>';
+            let emailMessageBody = `Hello ${mat.firstname} ${mat.lastname} 😃,<br/>`;
+            emailMessageBody += 'Vaccine Appointment found for you in Rhode Island!<br/>';
             emailMessageBody += `<b>Time:</b> ${mat.time}<br/>`;
             emailMessageBody += `<b>Date:</b> ${mat.date}<br/>`;
             emailMessageBody += `<b>Location:</b> ${mat.location}<br/>`;
