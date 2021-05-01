@@ -2,6 +2,7 @@ const VaccineScraper = require('./VaccineScraper');
 const connection = require('./connection');
 const { yyyymmddTommddyyyy, getHoursMinutesSeconds } = require('./date');
 const sendEmail = require('./email');
+const colors = require('colors');
 
 const dotenv = require('dotenv');
 dotenv.config();
@@ -133,22 +134,31 @@ class VaccineBot {
             const [rows, fields] = await connection.execute('SELECT * FROM users WHERE userID = ?', [mat.userID]);
             const emailAddress = rows[0].email;
 
-            let messageBody = `Hello ${mat.firstname} ${mat.lastname}\n`;
-            messageBody += 'Vaccine Appointment found for you!\n';
-            messageBody += `Time: ${mat.time}\n`;
-            messageBody += `Date: ${mat.date}\n`;
-            messageBody += `Location: ${mat.location}\n`;
-            messageBody += `Link to signup: ${mat.link}`;
+            // let textMessageBody = `Hello ${mat.firstname} ${mat.lastname}\n`;
+            // textMessageBody += 'Vaccine Appointment found for you!\n';
+            // textMessageBody += `Time: ${mat.time}\n`;
+            // textMessageBody += `Date: ${mat.date}\n`;
+            // textMessageBody += `Location: ${mat.location}\n`;
+            // textMessageBody += `Link to signup: ${mat.link}`;
 
+            let emailMessageBody = `Hello ${mat.firstname} ${mat.lastname} 😃,<br/>`;
+            emailMessageBody += 'Vaccine Appointment found for you in Rhode Island!<br/>';
+            emailMessageBody += `<b>Time:</b> ${mat.time}<br/>`;
+            emailMessageBody += `<b>Date:</b> ${mat.date}<br/>`;
+            emailMessageBody += `<b>Location:</b> ${mat.location}<br/>`;
+            emailMessageBody += `<b>Link to signup:</b> ${mat.link}`;
+            
             // send text 
-            await client.messages.create({
-                body: messageBody,
-                from: senderPhoneNum,
-                to: recieverPhoneNum
-            });
+            // await client.messages.create({
+            //     body: textMessageBody,
+            //     from: senderPhoneNum,
+            //     to: recieverPhoneNum
+            // });
 
             // send email
-            sendEmail(emailAddress, messageBody);
+            sendEmail(emailAddress, emailMessageBody);
+
+            console.log(colors.green(`email sent to ${emailAddress}`));
 
             // update task as completed
             await connection.execute(`UPDATE task SET completed = 1 WHERE taskID = ${mat.taskID}`);
@@ -178,7 +188,7 @@ class VaccineBot {
         // process task queue, get appointments and tasks that matchup
         const matchingAppointments = await this.processTaskQueue(taskQueue, appointmentsMap);
 
-        // send texts
+        // send texts and emails
         await this.sendAlerts(matchingAppointments);
     }
 
