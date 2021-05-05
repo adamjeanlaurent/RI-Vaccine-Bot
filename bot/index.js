@@ -5,6 +5,7 @@ const main = async () => {
     const vaccineBot = new VaccineBot();
     const SECOND = 1000;
     const MINUTE = SECOND * 60;
+    console.log(colors.cyan('Bot Starting up🤖'));
     while(true) {
         try {
             await vaccineBot.run();

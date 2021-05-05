@@ -7,11 +7,8 @@ const VaccineAppointment = require('./VaccineAppointment');
 class VaccineScraper {
      constructor() {
         this.baseURL = 'https://www.vaccinateri.org';
-        this.pages = [
-            'https://www.vaccinateri.org/clinic/search?page=1',
-            'https://www.vaccinateri.org/clinic/search?page=2',
-            'https://www.vaccinateri.org/clinic/search?page=3'
-        ];
+        this.numPages = 0;
+        this.pages = [];
     }
 
     async getRegistrationLinks() {
@@ -33,8 +30,20 @@ class VaccineScraper {
 
         return registrationLinks;
     }
+
+    async fillPages() {
+        const dom = await this.getDOM('https://www.vaccinateri.org/clinic/search?page=1');
+        let pages = Array.from(dom.querySelectorAll('.page'));
+        let numberOfPages = pages[pages.length-2].querySelector('a').textContent; // <a href="/appointment/en/clinic/search?page=11">11</a>
+        this.numPages = parseInt(numberOfPages);
+        for(let i = 1; i <= this.numPages; i++) {
+            this.pages.push(`https://www.vaccinateri.org/clinic/search?page=${i}`);
+        }
+    }
     
     async getAllAvaiableApointments() {
+        await this.fillPages();
+        
         const registrationLinks = await this.getRegistrationLinks();
         const availableAppointments = [];
 

@@ -12,5 +12,11 @@ const testValidAppointments = async() => {
     console.log(appointments);
 }
 
-testValidAppointments();
+const testFillPages = async() => {
+    await scraper.fillPages();
+}
+
+// testValidAppointments();
 // testRegistrationLinks();
+
+testFillPages();
