@@ -12,8 +12,9 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const client = require('twilio')(accountSid, authToken);
 
 class VaccineBot {
-    constructor() {
+    constructor(debug) {
         this.scraper = new VaccineScraper();
+        this.debug = debug;
     }
 
     async getUncompletedTasks() {
