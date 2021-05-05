@@ -43,7 +43,7 @@ class VaccineScraper {
     
     async getAllAvaiableApointments() {
         await this.fillPages();
-        
+
         const registrationLinks = await this.getRegistrationLinks();
         const availableAppointments = [];
 
@@ -97,8 +97,8 @@ class VaccineScraper {
             // each appontinemt slot should have two td tags
             // the first holds a span with the time
             // the second holds a paragraph tags with whether is it available
-            const tableDataCells = appointmentSlot.querySelectorAll('td'); 
-            const appointmentTime = tableDataCells[0].querySelector('span').textContent;
+            const tableDataCells = appointmentSlot.querySelectorAll('td');
+            const appointmentTime = tableDataCells[0].querySelector('label').textContent;
             const isAppointmentAvailable = !tableDataCells[1].querySelector('p').textContent.includes('No');
             const vaccinesLeft = parseInt(
                 tableDataCells[1]
