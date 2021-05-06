@@ -169,6 +169,11 @@ class VaccineBot {
     }
 
     async run() {
+        // get users from db that are waiting for vaccine
+        const taskQueue = await this.getUncompletedTasks();
+
+        if(taskQueue.length === 0) return;
+
         // get available appointments
         const availableAppointments = await this.scraper.getAllAvaiableApointments();
 
@@ -184,9 +189,6 @@ class VaccineBot {
                 appointmentsMap.set(app.date, [ app ]);
             }
         }
-
-        // get users from db that are waiting for vaccine
-        const taskQueue = await this.getUncompletedTasks();
 
         // process task queue, get appointments and tasks that matchup
         const matchingAppointments = await this.processTaskQueue(taskQueue, appointmentsMap);
