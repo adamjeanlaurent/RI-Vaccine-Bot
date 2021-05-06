@@ -7,22 +7,29 @@ const main = async () => {
     if(process.argv[2] && [process.argv[2]] === 'debug') {
         debug = true;
     }
-    const spinner = new Spinner('bot processing🤖... %s');
-    spinner.setSpinnerString('|/-\\');
+    const processingSpinner = new Spinner('bot processing🤖... %s');
+    const sleepSpinner = new Spinner('bot sleeping🤖... %s');
+    processingSpinner.setSpinnerString('|/-\\');
+    sleepSpinner.setSpinnerString('|/-\\');
+
     const vaccineBot = new VaccineBot();
     const SECOND = 1000;
     const MINUTE = SECOND * 60;
+
     console.log(colors.cyan('Bot Starting up🤖'));
+
     while(true) {
         try {
-            spinner.start();
+            processingSpinner.start();
             await vaccineBot.run(debug);
-            spinner.stop(false);
-            console.log(colors.magenta('Bot Sleeping🤖'));
+            processingSpinner.stop(false);
+            sleepSpinner.start();
             await vaccineBot.sleep(20 * MINUTE); // sleep for 20 minutes
+            sleepSpinner.stop(false);
         }
         catch(error) {
-            spinner.stop(false);
+            processingSpinner.stop(false);
+            sleepSpinner.stop(false);
             if(process.env.NODE_ENV === 'development') {
                 throw error;
             }
