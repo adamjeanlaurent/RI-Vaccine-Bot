@@ -148,6 +148,8 @@ class VaccineBot {
             emailMessageBody +=    `<b>Date:</b> ${mat.date}<br/>`;
             emailMessageBody +=    `<b>Location:</b> ${mat.location}<br/>`;
             emailMessageBody +=    `<b>Link to signup:</b> ${mat.link}`;
+
+            const subject = `Vaccine Appointment Found For You At ${mat.time} - ${mat.date} - ${mat.location} 💉`;
             
             // send text 
             // await client.messages.create({
@@ -157,7 +159,7 @@ class VaccineBot {
             // });
 
             // send email
-            sendEmail(emailAddress, emailMessageBody);
+            sendEmail(emailAddress, emailMessageBody, subject);
 
             console.log(colors.green(`email sent to ${emailAddress}`));
 
