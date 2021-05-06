@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
 dotenv.config();
 
-const sendEmail = (to, body) => {
+const sendEmail = (to, body, subject) => {
     const senderMail = process.env.EMAIL_USER;
     const senderPass = process.env.EMAIL_APP_CODE;
 
@@ -22,7 +22,7 @@ const sendEmail = (to, body) => {
     emailTransporter.sendMail({
         from: '"Vaccine Bot" <rivaccinebot@yahoo.com>', // sender address
         to: to, // list of receivers
-        subject: "Vaccine Appointment Found For You 💉", // Subject line
+        subject: subject, // Subject line
         html: body, // html body
     });
 }
