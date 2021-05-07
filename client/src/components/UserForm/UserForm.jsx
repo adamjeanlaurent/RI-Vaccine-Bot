@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { withRouter } from "react-router-dom";
 import DatePicker from "react-datepicker";
+import TimePicker from 'react-time-picker';
 
 import './UserForm.css';
 import "react-datepicker/dist/react-datepicker.css";
@@ -10,11 +11,12 @@ function UserForm(props) {
         firstName: '',
         lastName: '',
         phone: '',
-        startTime: '',
-        endTime: '',
     });
 
     const [startDate, setStartDate] = useState(new Date()); 
+    const [startTime, setStartTime] = useState('10:00');
+    const [endTime, setEndTime] = useState('12:00');
+    const [success, setSuccess] = useState(null);
 
     const handleChange = (e) => {
         const { id, value } = e.target
@@ -26,7 +28,7 @@ function UserForm(props) {
 
     const handleSubmitClick = (e) => {
         e.preventDefault();
-        if (state.phone && startDate && state.startTime && state.endTime && state.firstName && state.lastName) {
+        if (state.phone && startDate && startTime && endTime && state.firstName && state.lastName) {
             sendDetailsToServer()
         } else {
             props.showError('please fill out all fields');
@@ -34,7 +36,8 @@ function UserForm(props) {
     }
 
     const sendDetailsToServer = async () => {
-        if(state.phone && startDate && state.startTime && state.endTime && state.firstName && state.lastName) {
+        setSuccess(null);
+        if(state.phone && startDate && startTime && endTime && state.firstName && state.lastName) {
             // convert date
             const day = startDate.getDate();
             const year = startDate.getFullYear();
@@ -54,6 +57,9 @@ function UserForm(props) {
                 fixedDate = `${year}-${month}-${day}`;
             }
 
+            const startTimeFixed = startTime + ':00';
+            const endTimeFixed = endTime + ':00';
+
             props.showError(null);
             const options = {
                 method: 'POST',
@@ -65,13 +71,13 @@ function UserForm(props) {
                     l_name: state.lastName,
                     phone: state.phone,
                     date_picked: fixedDate,
-                    start_time: state.startTime,
-                    end_time: state.endTime
+                    start_time: startTimeFixed,
+                    end_time: endTimeFixed
                 })
             }
 
             await fetch('/api/task/addTask', options);
-            state.successMessage = 'task created!';
+            setSuccess('Task Created!');
         }
     }
 
@@ -110,21 +116,21 @@ function UserForm(props) {
 
             <div className="form-group text-left">
                 <label htmlFor="exampleInputEmail">start time</label>
-                <input type="text" className="form-control" id="startTime" aria-describedby="startTimeHelp" placeholder="Enter start time" value={state.email} onChange={handleChange} />
+                <TimePicker onChange={setStartTime} value={startTime} />
                 <small id="startTimeHelp" className="form-text text-muted">we'll never share your information with anyone else</small>
             </div>
 
             <div className="form-group text-left">
                 <label htmlFor="exampleInputEmail">end time</label>
-                <input type="text" className="form-control" id="endTime" aria-describedby="endTimeHelp" placeholder="Enter end time" value={state.endTime} onChange={handleChange} />
+                <TimePicker onChange={setEndTime} value={endTime} />
                 <small id="endTimeHelp" className="form-text text-muted">we'll never share your information with anyone else</small>
             </div>
 
 
             <button type="submit" className="btn btn-primary" onClick={handleSubmitClick}>Create Task</button>
         </form>
-        <div className="alert alert-success mt-2" style={{ display: state.successMessage ? 'block' : 'none' }} role="alert">
-            {state.successMessage}
+        <div className="alert alert-success mt-2" style={{ display: success ? 'block' : 'none' }} role="alert">
+            {success}
         </div>
     </div>
     );

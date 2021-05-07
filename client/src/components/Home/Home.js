@@ -27,7 +27,6 @@ function Home(props) {
               <th scope="col">LastName</th>
               <th scope="col">Phone</th>
               <th scope="col">Date</th>
-              <th scope="col">TaskID</th>
               <th scope="col">StartTime</th>
               <th scope="col">EndTime</th>
               <th scope="col">Completed</th>
