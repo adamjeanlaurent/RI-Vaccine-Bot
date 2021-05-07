@@ -16,7 +16,7 @@ const main = async () => {
     const SECOND = 1000;
     const MINUTE = SECOND * 60;
 
-    console.log(colors.cyan('Bot Starting up🤖'));
+    console.log(colors.cyan('Bot Starting up🤖!'));
 
     while(true) {
         try {
