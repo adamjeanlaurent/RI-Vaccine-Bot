@@ -32,17 +32,19 @@ function Home(props) {
             </tr>
           </thead>
           <tbody>
-            {state.data.map(function(task) {
-              <tr>
-                <td>task.TaskID</td>
-                <td>task.FirstName</td>
-                <td>task.LastName</td>
-                <td>task.Phone</td>
-                <td>task.Date</td>
-                <td>task.StartTime</td>
-                <td>task.EndTime</td>
-                <td>task.Completed</td>
+            {state.map(function(task) {
+              return (
+                <tr>
+                <td>{task.TaskID}</td>
+                <td>{task.FirstName}</td>
+                <td>{task.LastName}</td>
+                <td>{task.Phone}</td>
+                <td>{task.Date}</td>
+                <td>{task.StartTime}</td>
+                <td>{task.EndTime}</td>
+                <td>{task.Completed}</td>
              </tr>
+              );
             })}
           </tbody>
         </table>
