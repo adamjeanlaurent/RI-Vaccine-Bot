@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import './UserForm.css';
 import { withRouter } from "react-router-dom";
+import DatePicker from "react-datepicker";
+
+import './UserForm.css';
+import "react-datepicker/dist/react-datepicker.css";
 
 function UserForm(props) {
     const [state, setState] = useState({
         firstName: '',
         lastName: '',
         phone: '',
-        datePicked: '',
         startTime: '',
-        endTime: ''
+        endTime: '',
     });
+
+    const [startDate, setStartDate] = useState(new Date()); 
 
     const handleChange = (e) => {
         const { id, value } = e.target
@@ -23,7 +26,7 @@ function UserForm(props) {
 
     const handleSubmitClick = (e) => {
         e.preventDefault();
-        if (state.phone && state.datePicked && state.startTime && state.endTime && state.firstName && state.lastName) {
+        if (state.phone && startDate && state.startTime && state.endTime && state.firstName && state.lastName) {
             sendDetailsToServer()
         } else {
             props.showError('please fill out all fields');
@@ -31,7 +34,26 @@ function UserForm(props) {
     }
 
     const sendDetailsToServer = async () => {
-        if(state.phone && state.datePicked && state.startTime && state.endTime && state.firstName && state.lastName) {
+        if(state.phone && startDate && state.startTime && state.endTime && state.firstName && state.lastName) {
+            // convert date
+            const day = startDate.getDate();
+            const year = startDate.getFullYear();
+            const month = startDate.getMonth() + 1;
+
+            let fixedDate = '';
+            if(month < 10 && day < 10) {
+                fixedDate = `${year}-0${month}-0${day}`;
+            }
+            else if(month < 10) {
+                fixedDate = `${year}-0${month}-${day}`;
+            }
+            else if(day < 10) {
+                fixedDate = `${year}-${month}-0${day}`;
+            }
+            else {
+                fixedDate = `${year}-${month}-${day}`;
+            }
+
             props.showError(null);
             const options = {
                 method: 'POST',
@@ -42,13 +64,14 @@ function UserForm(props) {
                     f_name: state.firstName,
                     l_name: state.lastName,
                     phone: state.phone,
-                    date_picked: state.datePicked,
+                    date_picked: fixedDate,
                     start_time: state.startTime,
                     end_time: state.endTime
                 })
             }
 
             await fetch('/api/task/addTask', options);
+            state.successMessage = 'task created!';
         }
     }
 
@@ -73,9 +96,15 @@ function UserForm(props) {
                 <small id="phoneHelp" className="form-text text-muted">we'll never share your information with anyone else</small>
             </div>
 
-            <div className="form-group text-left">
+            {/* <div className="form-group text-left">
                 <label htmlFor="exampleInputEmail">date</label>
                 <input type="text" className="form-control" id="datePicked" aria-describedby="dateHelp" placeholder="Enter date" value={state.datePicked} onChange={handleChange} />
+                <small id="dateHelp" className="form-text text-muted">we'll never share your information with anyone else</small>
+            </div> */}
+
+            <div className="form-group text-left">
+                <label htmlFor="exampleInputEmail">date</label>
+                <DatePicker selected={startDate} onChange={date => setStartDate(date)} />
                 <small id="dateHelp" className="form-text text-muted">we'll never share your information with anyone else</small>
             </div>
 
@@ -92,7 +121,7 @@ function UserForm(props) {
             </div>
 
 
-            <button type="submit" className="btn btn-primary" onClick={handleSubmitClick}> Register</button>
+            <button type="submit" className="btn btn-primary" onClick={handleSubmitClick}>Create Task</button>
         </form>
         <div className="alert alert-success mt-2" style={{ display: state.successMessage ? 'block' : 'none' }} role="alert">
             {state.successMessage}
