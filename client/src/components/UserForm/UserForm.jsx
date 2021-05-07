@@ -12,6 +12,11 @@ function UserForm(props) {
         lastName: '',
         phone: '',
     });
+    props.updateTitle('Create Tasks');
+
+    const redirectToHome = () => {
+        props.history.push('/home');
+      }
 
     const [startDate, setStartDate] = useState(new Date()); 
     const [startTime, setStartTime] = useState('10:00');
@@ -83,6 +88,7 @@ function UserForm(props) {
 
     return (
         <div className="card col-12 col-lg-4 login-card mt-2 hv-center">
+        <p>To save you time looking for vaccination appointments manually, reserve a date and time range with us and we will email and text you with all the information you need once an appointment is available in that date & time range.</p>
         <form>
             <div className="form-group text-left">
                 <label htmlFor="exampleInputEmail">First Name</label>
@@ -132,6 +138,9 @@ function UserForm(props) {
         <div className="alert alert-success mt-2" style={{ display: success ? 'block' : 'none' }} role="alert">
             {success}
         </div>
+        <br/>
+        <br/>
+        <button type="button" class="btn btn-primary" onClick={() => redirectToHome()}>Go Back To Home</button>
     </div>
     );
 }

@@ -9,6 +9,8 @@ function Home(props) {
       fetchTasks();
     }, []);
 
+    props.updateTitle('Home');
+
     const [state, setState] = useState([]);
 
     const fetchTasks = async () => {
@@ -16,9 +18,14 @@ function Home(props) {
       const data = await response.json();
       setState(data);
     }
+
+    const redirectToTasks = () => {
+      props.history.push('/form');
+    }
+
     return(
       <div class="container">
-          <h2 className="title"> Table to showcase your tasks</h2>
+          <h2 className="title">Your Current Vaccine Alert Tasks</h2>
           <table className="table">
           <thead className="thead-dark">
             <tr>
@@ -49,6 +56,7 @@ function Home(props) {
             })}
           </tbody>
         </table>
+        <button type="button" class="btn btn-primary" onClick={() => redirectToTasks()}>Create Vaccine Task Alerts</button>
       </div>
     );
     }

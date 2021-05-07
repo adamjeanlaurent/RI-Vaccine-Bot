@@ -30,7 +30,7 @@ function App() {
                 <UserForm showError={updateErrorMessage} updateTitle={updateTitle}/>
               </Route>
               <Route path="/home">
-                <Home/>
+                <Home updateTitle={updateTitle}/>
               </Route>
             </Switch> 
             <AlertComponent errorMessage={errorMessage} hideError={updateErrorMessage}/>
