@@ -5,7 +5,8 @@ import RegistrationForm from './components/RegistrationForm/RegistrationForm';
 import Home from './components/Home/Home';
 import PrivateRoute from './utils/PrivateRoutes';
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
-import AlertComponent from './components/AlertComponent/AlertComponent';  
+import AlertComponent from './components/AlertComponent/AlertComponent'; 
+import UserForm from './components/UserForm/UserForm';
 
 function App() {
   const [title, updateTitle] = useState(null);
@@ -24,6 +25,9 @@ function App() {
               </Route>
               <Route path="/login">
                 <LoginForm showError={updateErrorMessage} updateTitle={updateTitle}/>
+              </Route>
+              <Route path="/form">
+                <UserForm showError={updateErrorMessage} updateTitle={updateTitle}/>
               </Route>
               <PrivateRoute path="/home">
                 <Home/>

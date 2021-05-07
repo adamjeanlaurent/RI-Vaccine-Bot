@@ -21,31 +21,29 @@ function RegistrationForm(props) {
     }
 
 
-    const sendDetailsToServer = () => {
+    const sendDetailsToServer = async () => {
         // check that the user filled out form
         if (state.email.length && state.password.length) {
             props.showError(null);
             const payload = {
-                "email": state.email,
-                "password": state.password
+                email: state.email,
+                password: state.password
             }
-            axios.post('/api/auth/register', payload)
-                .then(function (response) {
-                    if (response.status === 200) {
-                        setState(prevState => ({
-                            ...prevState,
-                            'SuccessMessage': 'Registration successful. Redirecting to home page'
-                        }))
-                        localStorage.setItem(ACCESS_TOKEN_NAME, response.data.token);
-                        redirectToHome();
-                        props.showError(null)
-                    } else {
-                        props.showError("Some error ocurred");
-                    }
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+
+            const options =  {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            }
+
+            const regResponse = await fetch('/api/auth/register', options);
+            const authResponse = await fetch('/api/auth/authenticate', options);
+
+            const authText = await authResponse.text();
+            redirectToHome();
+
         } else {
             props.showError('Please enter valid email and password')
         }

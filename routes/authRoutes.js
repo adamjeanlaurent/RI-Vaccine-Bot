@@ -9,6 +9,7 @@ router.post('/register', function(req, res) {
     // Grabs email & password
     let email = req.body.email;
     let password = req.body.password;
+    console.log(email, password);
     
     // Save email and password in DB
     if (email != "" && password != ""){
