@@ -15,9 +15,38 @@ function Home(props) {
       setState(data);
     }
     return(
-        <div>
-          <h1>hi</h1>
-        </div>
+      <div class="container">
+          <h2> Table to showcase your tasks</h2>
+          <table className="table">
+          <thead>
+            <tr>
+              <th>TaskID</th>
+              <th>FirstName</th>
+              <th>LastName</th>
+              <th>Phone</th>
+              <th>Date</th>
+              <th>TaskID</th>
+              <th>StartTime</th>
+              <th>EndTime</th>
+              <th>Completed</th>
+            </tr>
+          </thead>
+          <tbody>
+            {state.data.map(function(task) {
+              <tr>
+                <td>task.TaskID</td>
+                <td>task.FirstName</td>
+                <td>task.LastName</td>
+                <td>task.Phone</td>
+                <td>task.Date</td>
+                <td>task.StartTime</td>
+                <td>task.EndTime</td>
+                <td>task.Completed</td>
+             </tr>
+            })}
+          </tbody>
+        </table>
+      </div>
     );
     }
 
