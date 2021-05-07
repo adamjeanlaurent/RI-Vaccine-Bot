@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import axios from 'axios';
 import './LoginForm.css';
-import {API_BASE_URL, ACCESS_TOKEN_NAME} from '../../constants/apiConstants';
 import { withRouter } from "react-router-dom";
 
 function LoginForm(props) {
@@ -27,19 +26,16 @@ function LoginForm(props) {
         axios.post('/api/auth/authenticate', payload)
             .then(function (response) {
                 if(response.status === 200){
-                    setState(prevState => ({
-                        ...prevState,
-                        'successMessage' : 'Login successful. Redirecting to home page..'
-                    }))
-                    localStorage.setItem(ACCESS_TOKEN_NAME,response.data.token);
-                    redirectToHome();
-                    props.showError(null)
-                }
-                else if(response.code === 204){
-                    props.showError("Username and password do not match");
-                }
-                else{
-                    props.showError("Username does not exists");
+                    if(response.data === 'You have been authenticated.') {
+                        redirectToHome();
+                        props.showError(null);
+                    }
+                    else {
+                        setState(prevState => ({
+                            ...prevState,
+                            'successMessage' : response.data
+                        }))
+                    }
                 }
             })
             .catch(function (error) {
@@ -87,7 +83,7 @@ function LoginForm(props) {
                     onClick={handleSubmitClick}
                 >Submit</button>
             </form>
-            <div className="alert alert-success mt-2" style={{display: state.successMessage ? 'block' : 'none' }} role="alert">
+            <div className="alert alert-danger mt-2" style={{display: state.successMessage ? 'block' : 'none' }} role="alert">
                 {state.successMessage}
             </div>
             <div className="registerMessage">
