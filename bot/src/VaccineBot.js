@@ -32,11 +32,14 @@ class VaccineBot {
         // matches tasks against avaiblable appoints (using unknown alorithm as this time) 
         // and helper doesAppointmentMatchPreferences
         // after the matching process, uses sendTextMessage in a loop to send text messages to users
+        if(this.debug) console.log(`processing task queue`);
 
         const matchingAppointments = [];
 
         for(let i = 0; i < taskQueue.length; i++) {
+            if(this.debug) console.log(`original date ${taskQueue[i].date_picked}`);
             let convertedDate = yyyymmddTommddyyyy(taskQueue[i].date_picked);
+            if(this.debug) console.log(`converted date: ${convertedDate}`);
             if(appointmentsMap.has(convertedDate)) {
                 // if there are appointments any at this date
 
@@ -171,11 +174,13 @@ class VaccineBot {
     async run() {
         // get users from db that are waiting for vaccine
         const taskQueue = await this.getUncompletedTasks();
+        if(this.debug) console.log(`got ${taskQueue.length} uncompleted tasks`);
 
         if(taskQueue.length === 0) return;
 
         // get available appointments
         const availableAppointments = await this.scraper.getAllAvaiableApointments();
+        if(this.debug) console.log(`got ${availableAppointments.length} available appointments`);
 
         // convert appointments to map
         // Map<string, VaccineAppointment[]> , string is date of the appointment, and a second arg is array of appointments at that date
@@ -192,6 +197,7 @@ class VaccineBot {
 
         // process task queue, get appointments and tasks that matchup
         const matchingAppointments = await this.processTaskQueue(taskQueue, appointmentsMap);
+        if(this.debug) console.log(`got ${matchingAppointments.length} mathing appointments`);
 
         // send texts and emails
         await this.sendAlerts(matchingAppointments);
