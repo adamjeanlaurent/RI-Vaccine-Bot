@@ -3,27 +3,22 @@ import { withRouter } from 'react-router-dom';
 import axios from 'axios';
 
 function Home(props) {
-    function redirectToLogin() {
-    props.history.push('/login');
-    }
+    useEffect(() => {
+      fetchTasks();
+    }, []);
 
-    function Question(props) {
-      useEffect(() => {
-        fetchQuestion();
-      }, []);
+    const [state, setState] = useState([]);
 
-      const [state, setState] = useState({});
-
-    const fetchQuestion = async () => {
+    const fetchTasks = async () => {
       const response = await fetch('/api/task/getTasks');
       const data = await response.json();
       setState(data);
-
+    }
     return(
         <div>
-          <h1> {state.Question} </h1>
+          <h1>hi</h1>
         </div>
     );
-}
+    }
 
 export default withRouter(Home);
