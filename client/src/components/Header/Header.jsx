@@ -9,7 +9,7 @@ function Header(props) {
     }
     let title = capitalize(props.location.pathname.substring(1,props.location.pathname.length))
     if(props.location.pathname === '/') {
-        title = 'Welcome'
+        title = 'Register'
     }
     function renderLogout() {
         if(props.location.pathname === '/home'){
