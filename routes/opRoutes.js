@@ -22,6 +22,7 @@ router.post('/addTask', function(req, res){
             if (err) throw err;
             return res.send("Task just added. We will see when the task is completed!");
         });
+
     } else {return res.send("No session detected.");}
 });
 
