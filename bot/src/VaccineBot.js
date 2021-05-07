@@ -38,6 +38,7 @@ class VaccineBot {
 
         for(let i = 0; i < taskQueue.length; i++) {
             if(this.debug) console.log(`original date ${taskQueue[i].date_picked}`);
+            if(!taskQueue[i].date_picked) continue;
             let convertedDate = yyyymmddTommddyyyy(taskQueue[i].date_picked);
             if(this.debug) console.log(`converted date: ${convertedDate}`);
             if(appointmentsMap.has(convertedDate)) {

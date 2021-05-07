@@ -3,12 +3,12 @@ const colors = require('colors');
 
 const main = async () => {
     let debug = false;
-    if(process.argv[2] && [process.argv[2]] === 'debug') {
-        console.log('we in debug');
+    if(process.argv[2] && process.argv[2] === 'debug') {
+        console.log('we in debug🐛');
         debug = true;
     }
 
-    const vaccineBot = new VaccineBot();
+    const vaccineBot = new VaccineBot(debug);
     const SECOND = 1000;
     const MINUTE = SECOND * 60;
 
@@ -17,7 +17,7 @@ const main = async () => {
     while(true) {
         try {
             console.log('bot processing 🤖');
-            await vaccineBot.run(debug);
+            await vaccineBot.run();
             console.log('bot sleeping 🤖');
             await vaccineBot.sleep(20 * MINUTE); // sleep for 20 minutes
         }
