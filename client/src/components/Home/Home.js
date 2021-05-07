@@ -1,28 +1,29 @@
-import React,{ useEffect } from 'react';
+import React,{ useState, useEffect  } from 'react';
 import { withRouter } from 'react-router-dom';
-import { ACCESS_TOKEN_NAME, API_BASE_URL } from '../../constants/apiConstants';
 import axios from 'axios';
 
 function Home(props) {
-    useEffect(() => {
-        axios.get(API_BASE_URL+'/user/me', { headers: { 'token': localStorage.getItem(ACCESS_TOKEN_NAME) }})
-        .then(function (response) {
-            if(response.status !== 200){
-              redirectToLogin()
-            }
-        })
-        .catch(function (error) {
-          redirectToLogin()
-        });
-      })
     function redirectToLogin() {
     props.history.push('/login');
     }
+
+    function Question(props) {
+      useEffect(() => {
+        fetchQuestion();
+      }, []);
+
+      const [state, setState] = useState({});
+
+    const fetchQuestion = async () => {
+      const response = await fetch('/api/task/getTasks');
+      const data = await response.json();
+      setState(data);
+
     return(
-        <div className="mt-2">
-            Home page content
+        <div>
+          <h1> {state.Question} </h1>
         </div>
-    )
+    );
 }
 
 export default withRouter(Home);
