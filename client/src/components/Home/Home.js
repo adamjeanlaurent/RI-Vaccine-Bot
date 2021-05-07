@@ -1,6 +1,5 @@
 import React,{ useState, useEffect  } from 'react';
 import { withRouter } from 'react-router-dom';
-import axios from 'axios';
 
 function Home(props) {
     function redirectToLogin() {
@@ -18,6 +17,7 @@ function Home(props) {
       const response = await fetch('/api/task/getTasks');
       const data = await response.json();
       setState(data);
+    }
 
     return(
         <div>
