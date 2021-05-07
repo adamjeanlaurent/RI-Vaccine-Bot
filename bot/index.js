@@ -4,7 +4,7 @@ const colors = require('colors');
 const main = async () => {
     let debug = false;
     if(process.argv[2] && process.argv[2] === 'debug') {
-        console.log('we in debug🐛');
+        console.log('we in debug🐛🦟');
         debug = true;
     }
 
