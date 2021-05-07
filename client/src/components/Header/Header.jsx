@@ -20,8 +20,8 @@ function Header(props) {
             )
         }
     }
-    function handleLogout() {
-        localStorage.removeItem(ACCESS_TOKEN_NAME)
+    async function handleLogout() {
+        await fetch('/api/auth/logout');
         props.history.push('/login')
     }
     return(
