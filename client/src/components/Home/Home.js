@@ -1,6 +1,7 @@
 import React,{ useState, useEffect  } from 'react';
 import { withRouter } from 'react-router-dom';
 import axios from 'axios';
+import './Home.css';
 
 function Home(props) {
     useEffect(() => {
@@ -16,19 +17,19 @@ function Home(props) {
     }
     return(
       <div class="container">
-          <h2> Table to showcase your tasks</h2>
+          <h2 className="title"> Table to showcase your tasks</h2>
           <table className="table">
-          <thead>
+          <thead className="thead-dark">
             <tr>
-              <th>TaskID</th>
-              <th>FirstName</th>
-              <th>LastName</th>
-              <th>Phone</th>
-              <th>Date</th>
-              <th>TaskID</th>
-              <th>StartTime</th>
-              <th>EndTime</th>
-              <th>Completed</th>
+              <th scope="col">TaskID</th>
+              <th scope="col">FirstName</th>
+              <th scope="col">LastName</th>
+              <th scope="col">Phone</th>
+              <th scope="col">Date</th>
+              <th scope="col">TaskID</th>
+              <th scope="col">StartTime</th>
+              <th scope="col">EndTime</th>
+              <th scope="col">Completed</th>
             </tr>
           </thead>
           <tbody>
@@ -42,8 +43,8 @@ function Home(props) {
                 <td>{task.Date}</td>
                 <td>{task.StartTime}</td>
                 <td>{task.EndTime}</td>
-                <td>{task.Completed}</td>
-             </tr>
+                <td>{task.Completed ? "Yes" : "No"}</td>
+            </tr>
               );
             })}
           </tbody>
